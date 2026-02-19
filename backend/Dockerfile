@@ -5,14 +5,17 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 
+# Copy package files
 COPY package*.json ./
 
-# Use npm ci with --omit=dev for production installs
-RUN npm ci --omit=dev
+# Install dependencies
+# When NODE_ENV=production, npm automatically skips devDependencies
+RUN npm install --loglevel=error
 
+# Copy application code
 COPY . .
 
-# Expose the correct port (PORT env var in .env.example is 3000)
+# Expose the correct port (matches PORT=3000 in .env.example)
 EXPOSE 3000
 
 CMD [ "node", "src/index.js" ]
