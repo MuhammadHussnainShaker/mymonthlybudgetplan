@@ -1,12 +1,23 @@
-mymonthlybudgetplan.app {
-  root * /usr/share/caddy
+# Use environment variable for domain configuration
+{$DOMAIN:mymonthlybudgetplan.com} {
+  # Enable gzip and zstd compression
   encode gzip zstd
 
-  try_files {path} /index.html
-  file_server
+  # Reverse proxy /api/* requests to backend container
+  handle /api/* {
+    reverse_proxy backend:3000
+  }
 
-  header /* {
-    Cache-Control "public , max-age=31536000, immutable"
+  # Serve frontend static files for all other requests
+  handle {
+    root * /usr/share/caddy
+    try_files {path} /index.html
+    file_server
+  }
+
+  # Cache static assets but not index.html
+  header /assets/* {
+    Cache-Control "public, max-age=31536000, immutable"
   }
 
   header /index.html {
