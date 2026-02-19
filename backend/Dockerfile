@@ -9,7 +9,8 @@ ENV NODE_ENV=production
 COPY package*.json ./
 
 # Install dependencies
-# When NODE_ENV=production, npm automatically skips devDependencies
+# Note: Using npm install instead of npm ci due to npm ci timeout issues in some environments
+# NODE_ENV=production ensures devDependencies are skipped
 RUN npm install --loglevel=error
 
 # Copy application code
