@@ -16,7 +16,6 @@ export default function Signup() {
     const isNewAccount = now - createdAt < 10000
 
     if (!isNewAccount) {
-      console.log('Restored session detected. Skipping auto-email.')
       return
     }
     try {
@@ -27,9 +26,6 @@ export default function Signup() {
       await sendEmailVerification(user, {
         url: verificationUrl,
       })
-
-      // // Sign out the user immediately after signup -> No need TODO: delete it
-      // await auth.signOut()
 
       navigate('/verify-email')
     } catch (err) {

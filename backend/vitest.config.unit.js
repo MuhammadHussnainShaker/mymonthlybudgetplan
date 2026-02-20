@@ -19,6 +19,7 @@ export default defineConfig({
       'src/tests/firebase-config.test.js',
       'src/tests/saving.controller.test.js',
       'src/tests/monthlyCategoricalExpense.controller.test.js',
+      'src/tests/api.healthCheck.test.js',
     ],
   },
 })

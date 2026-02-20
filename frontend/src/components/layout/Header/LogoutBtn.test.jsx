@@ -9,8 +9,13 @@ vi.mock('@/services/firebase/firebaseClient', () => ({
   },
 }))
 
+vi.mock('@/utils/apiFetch', () => ({
+  apiFetch: vi.fn(() => Promise.resolve()),
+}))
+
 import LogoutBtn from '@/components/layout/Header/LogoutBtn'
 import { auth } from '@/services/firebase/firebaseClient'
+import { apiFetch } from '@/utils/apiFetch'
 
 describe('LogoutBtn', () => {
   beforeEach(() => {
@@ -34,6 +39,9 @@ describe('LogoutBtn', () => {
     fireEvent.click(screen.getByRole('button', { name: /logout/i }))
 
     await waitFor(() => {
+      expect(apiFetch).toHaveBeenCalledWith('/api/v1/auth/logout', {
+        method: 'POST',
+      })
       expect(auth.signOut).toHaveBeenCalledTimes(1)
       expect(logoutMock).toHaveBeenCalledTimes(1)
     })

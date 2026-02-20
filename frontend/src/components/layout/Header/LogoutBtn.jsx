@@ -1,19 +1,23 @@
 import { auth } from '@/services/firebase/firebaseClient'
 import useUserStore from '@/store/useUserStore'
+import { apiFetch } from '@/utils/apiFetch'
 
 export default function LogoutBtn() {
   const logout = useUserStore((state) => state.logout)
 
   const handleLogout = async () => {
     try {
-      await auth.signOut()
-      logout()
-    } catch (error) {
-      console.error('Error during logout:', error)
+      await apiFetch('/api/v1/auth/logout', { method: 'POST' })
+    } catch {
+      // Continue with client-side logout even if server call fails
     }
+    try {
+      await auth.signOut()
+    } catch {
+      // Continue with store logout even if Firebase signOut fails
+    }
+    logout()
   }
-
-  // TODO: create logout functionality on backend and use that to clear accessToken from cookies
 
   return (
     <button

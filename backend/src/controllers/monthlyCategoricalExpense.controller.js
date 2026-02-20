@@ -196,7 +196,6 @@ const toggleMonthlyCategoricalExpenseSelectable = asyncHandler(
   async (req, res) => {
     const { monthlyCategoricalExpenseId, month } = req.params
     const { selectable } = req.body
-    console.log('month', month)
 
     const validated = validateAndSanitizeInput(
       { monthlyCategoricalExpenseId, month, selectable },

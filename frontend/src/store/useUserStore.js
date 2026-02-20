@@ -30,6 +30,4 @@ const useUserStore = create()(
   ),
 )
 
-// TODO: Handle "Hydration"
-
 export default useUserStore

@@ -21,7 +21,7 @@ services:
     networks:
       - mmbp-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8081/test || exit 1"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8081/api/v1/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -58,7 +58,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      # - "443:443/udp" # For HTTP/3 TODO: Understand it
     environment:
       - DOMAIN=${DOMAIN:-mymonthlybudgetplan.com}
     volumes:
