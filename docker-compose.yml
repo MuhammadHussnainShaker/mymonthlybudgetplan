@@ -21,7 +21,7 @@ services:
     networks:
       - mmbp-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8081/test || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -43,8 +43,8 @@ services:
     container_name: mmbp-frontend-build
     volumes:
       # Mount the dist directory to a named volume
-      # Any files written to /mymonthlybudgetplan/dist will go to frontend-dist
-      - frontend-dist:/mymonthlybudgetplan/dist
+      # Any files written to /app/dist will go to frontend-dist
+      - frontend-dist:/app/dist
     command: ["sh", "-c", "echo 'Frontend build container - dist files available in volume'"]
 
   # Caddy reverse proxy and static file server
