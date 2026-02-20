@@ -6,16 +6,8 @@ export default function LogoutBtn() {
   const logout = useUserStore((state) => state.logout)
 
   const handleLogout = async () => {
-    try {
-      await apiFetch('/api/v1/auth/logout', { method: 'POST' })
-    } catch {
-      // Continue with client-side logout even if server call fails
-    }
-    try {
-      await auth.signOut()
-    } catch {
-      // Continue with store logout even if Firebase signOut fails
-    }
+    await apiFetch('/api/v1/auth/logout', { method: 'POST' }).catch(() => {})
+    await auth.signOut().catch(() => {})
     logout()
   }
 
