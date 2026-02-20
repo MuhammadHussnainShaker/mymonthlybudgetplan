@@ -16,6 +16,9 @@ export default defineConfig({
       'src/tests/errorhandler.test.js',
       'src/tests/auth.middleware.test.js',
       'src/tests/firebase-auth.middleware.test.js',
+      'src/tests/firebase-config.test.js',
+      'src/tests/saving.controller.test.js',
+      'src/tests/monthlyCategoricalExpense.controller.test.js',
     ],
   },
 })

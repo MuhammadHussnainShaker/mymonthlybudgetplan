@@ -63,7 +63,7 @@ describe('Saving Routes - /api/v1/savings', () => {
       expect(res.status).toBe(400)
       expect(res.body.success).toBe(false)
       expect(res.body.message).toContain(
-        'Description for income record is required',
+        'Description for saving record is required',
       )
     })
 
@@ -78,7 +78,7 @@ describe('Saving Routes - /api/v1/savings', () => {
 
       expect(res.status).toBe(400)
       expect(res.body.success).toBe(false)
-      expect(res.body.message).toContain('Month for income record is required')
+      expect(res.body.message).toContain('Month for saving record is required')
     })
 
     it('should return 401 if no auth token is provided', async () => {
