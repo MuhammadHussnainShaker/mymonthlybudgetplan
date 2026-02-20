@@ -23,7 +23,7 @@ const createMonthlyCategoricalExpense = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Month for monthly categorical expense is required')
   }
 
-  if (!parentId && mongoose.Types.ObjectId.isValid(parentId)) {
+  if (!parentId || !mongoose.Types.ObjectId.isValid(parentId)) {
     throw new ApiError(400, 'Missing or invalid Parent ID')
   }
 
@@ -120,7 +120,7 @@ const updateMonthlyCategoricalExpense = asyncHandler(async (req, res) => {
   if (projectedAmount !== undefined && projectedAmount !== null)
     dataToUpdate.projectedAmount = projectedAmount
 
-  // only update actualAmount if selectable is not false
+  // only allow manual actualAmount update when selectable is false (not auto-managed by daily expenses)
   if (
     existingMonthlyCategoricalExpense?.selectable === false &&
     actualAmount !== undefined &&

@@ -8,11 +8,11 @@ const createSaving = asyncHandler(async (req, res) => {
   const { description, projectedAmount, actualAmount, month } = req.body
 
   if (!description?.trim()) {
-    throw new ApiError(400, 'Description for income record is required')
+    throw new ApiError(400, 'Description for saving record is required')
   }
 
   if (!month) {
-    throw new ApiError(400, 'Month for income record is required')
+    throw new ApiError(400, 'Month for saving record is required')
   }
 
   const savingRecord = await Saving.create({
@@ -34,7 +34,7 @@ const getSavings = asyncHandler(async (req, res) => {
   const { month } = req.params
 
   if (!month) {
-    throw new ApiError(400, 'Month is required to get income records')
+    throw new ApiError(400, 'Month is required to get saving records')
   }
 
   const monthStart = new Date(month)
