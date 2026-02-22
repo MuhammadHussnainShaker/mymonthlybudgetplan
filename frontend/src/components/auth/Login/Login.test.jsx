@@ -14,6 +14,10 @@ vi.mock('react-router', async () => {
   }
 })
 
+vi.mock('@/services/firebase/firebaseClient', () => ({
+  auth: { currentUser: null },
+}))
+
 describe('Login', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -25,13 +29,15 @@ describe('Login', () => {
     mockNavigate.mockClear()
   })
 
-  it('renders login form with FirebaseUI', () => {
+  it('renders login form', () => {
     render(
       <MemoryRouter>
         <Login />
       </MemoryRouter>,
     )
 
-    expect(screen.getByTestId('signin-screen')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toBeInTheDocument()
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
   })
 })

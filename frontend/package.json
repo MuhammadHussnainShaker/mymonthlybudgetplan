@@ -13,7 +13,6 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "@firebase-oss/ui-react": "7.0.2-beta",
     "@tailwindcss/vite": "4.1.18",
     "firebase": "12.9.0",
     "react": "19.1.1",

@@ -25,19 +25,13 @@ vi.mock('firebase/auth', () => ({
     EMAIL_PASSWORD_SIGN_IN_METHOD: 'password',
   },
   sendEmailVerification: vi.fn(() => Promise.resolve()),
-}))
-
-vi.mock('@firebase-oss/ui-core', () => ({
-  initializeUI: vi.fn(() => ({})),
-}))
-
-vi.mock('@firebase-oss/ui-react', () => ({
-  FirebaseUIProvider: ({ children }) => children,
-  SignUpAuthScreen: ({ onSignUp }) => (
-    <div data-testid="signup-screen">SignUp Screen</div>
-  ),
-  SignInAuthScreen: ({ onSignIn }) => (
-    <div data-testid="signin-screen">SignIn Screen</div>
+  signInWithEmailAndPassword: vi.fn(() => Promise.resolve({ user: { emailVerified: true } })),
+  createUserWithEmailAndPassword: vi.fn(() =>
+    Promise.resolve({
+      user: {
+        metadata: { creationTime: new Date().toISOString() },
+      },
+    }),
   ),
 }))
 

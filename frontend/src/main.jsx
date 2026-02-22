@@ -15,37 +15,33 @@ import {
   UserProfile,
 } from '@/pages/index.js'
 import { AuthLayout } from '@/components/index.js'
-import { FirebaseUIProvider } from '@firebase-oss/ui-react'
-import { ui } from '@/services/firebase/firebaseClient'
 
 const root = document.getElementById('root')
 
 createRoot(root).render(
   <StrictMode>
-    <FirebaseUIProvider ui={ui}>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<App />}>
-            <Route index element={<Home />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<App />}>
+          <Route index element={<Home />} />
 
-            {/* Public routes */}
-            <Route element={<AuthLayout authenticationRequired={false} />}>
-              <Route path='/signup' element={<Signup />} />
-              <Route path='/login' element={<Login />} />
-              <Route path='/verify-email' element={<VerifyEmail />} />
-              <Route path='/forgot-password' element={<ForgotPassword />} />
-            </Route>
-
-            {/* Private routes */}
-            <Route element={<AuthLayout authenticationRequired={true} />}>
-              <Route path='/dashboard' element={<Dashboard />} />
-              <Route path='/monthly-expenses' element={<MonthlyExpenses />} />
-              <Route path='/daily-expenses' element={<DailyExpenses />} />
-              <Route path='/user-profile' element={<UserProfile />} />
-            </Route>
+          {/* Public routes */}
+          <Route element={<AuthLayout authenticationRequired={false} />}>
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/verify-email' element={<VerifyEmail />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </FirebaseUIProvider>
+
+          {/* Private routes */}
+          <Route element={<AuthLayout authenticationRequired={true} />}>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/monthly-expenses' element={<MonthlyExpenses />} />
+            <Route path='/daily-expenses' element={<DailyExpenses />} />
+            <Route path='/user-profile' element={<UserProfile />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )

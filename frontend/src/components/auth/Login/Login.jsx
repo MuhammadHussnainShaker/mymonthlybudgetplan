@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
-import { SignInAuthScreen } from '@firebase-oss/ui-react'
-import { sendEmailVerification } from 'firebase/auth'
+import { useNavigate, Link } from 'react-router'
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth } from '@/services/firebase/firebaseClient'
 import useUserStore from '@/store/useUserStore'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import { apiAuthFetch } from '@/utils/apiFetch'
 
 export default function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [isResending, setIsResending] = useState(false)
   const [showResend, setShowResend] = useState(false)
@@ -74,6 +76,23 @@ export default function Login() {
     }
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError('')
+    setShowResend(false)
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      await handleSignIn(userCredential.user)
+    } catch (err) {
+      console.error('Error signing in:', err)
+      setError(err?.message || 'Invalid email or password')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className='max-w-md mx-auto space-y-3'>
       <ErrorMessage message={error} />
@@ -95,10 +114,60 @@ export default function Login() {
         </p>
       )}
 
-      <SignInAuthScreen
-        onSignIn={handleSignIn}
-        onForgotPasswordClick={() => navigate('/forgot-password')}
-      />
+      <form onSubmit={handleSubmit} className='space-y-3'>
+        <div className='grid gap-1'>
+          <label htmlFor='email' className='text-sm'>
+            Email
+          </label>
+          <input
+            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
+            type='email'
+            name='email'
+            id='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className='grid gap-1'>
+          <label htmlFor='password' className='text-sm'>
+            Password
+          </label>
+          <input
+            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
+            type='password'
+            name='password'
+            id='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className='text-right'>
+          <Link to='/forgot-password' className='text-sm text-blue-400 hover:text-blue-300'>
+            Forgot password?
+          </Link>
+        </div>
+
+        <button
+          type='submit'
+          disabled={isSubmitting}
+          className='w-full rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50'
+        >
+          {isSubmitting ? 'Signing in...' : 'Sign In'}
+        </button>
+      </form>
+
+      <p className='text-sm text-center text-slate-400'>
+        Don&apos;t have an account?{' '}
+        <Link to='/signup' className='text-blue-400 hover:text-blue-300'>
+          Sign up
+        </Link>
+      </p>
     </div>
   )
 }
