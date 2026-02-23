@@ -4,6 +4,7 @@ import Login from './Login'
 
 // Mock Login component
 vi.mock('@/components', () => ({
+  Container: ({ children }) => <div>{children}</div>,
   Login: () => <div data-testid="login-component">Login Component</div>,
 }))
 
