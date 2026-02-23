@@ -2,9 +2,10 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import Login from './Login'
 
-// Mock Login component
+// Mock Login component and Container
 vi.mock('@/components', () => ({
   Login: () => <div data-testid="login-component">Login Component</div>,
+  Container: ({ children }) => <div data-testid="container-component">{children}</div>,
 }))
 
 describe('Login Page', () => {

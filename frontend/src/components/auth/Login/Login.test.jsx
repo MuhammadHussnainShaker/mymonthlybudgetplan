@@ -14,6 +14,19 @@ vi.mock('react-router', async () => {
   }
 })
 
+vi.mock('firebase/auth', () => ({
+  signInWithEmailAndPassword: vi.fn(),
+  sendEmailVerification: vi.fn(),
+}))
+
+vi.mock('@/services/firebase/firebaseClient', () => ({
+  auth: { currentUser: null },
+}))
+
+vi.mock('@/utils/apiFetch', () => ({
+  apiAuthFetch: vi.fn(),
+}))
+
 describe('Login', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -25,13 +38,15 @@ describe('Login', () => {
     mockNavigate.mockClear()
   })
 
-  it('renders login form with FirebaseUI', () => {
+  it('renders login form with email and password fields', () => {
     render(
       <MemoryRouter>
         <Login />
       </MemoryRouter>,
     )
 
-    expect(screen.getByTestId('signin-screen')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email *')).toBeInTheDocument()
+    expect(screen.getByLabelText('Password *')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
   })
 })

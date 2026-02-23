@@ -14,6 +14,12 @@ vi.mock('react-router', async () => {
   }
 })
 
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(() => ({})),
+  createUserWithEmailAndPassword: vi.fn(),
+  sendEmailVerification: vi.fn(),
+}))
+
 describe('Signup', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -25,13 +31,16 @@ describe('Signup', () => {
     mockNavigate.mockClear()
   })
 
-  it('renders signup form with FirebaseUI', () => {
+  it('renders signup form with email, password, and confirm password fields', () => {
     render(
       <MemoryRouter>
         <Signup />
       </MemoryRouter>,
     )
 
-    expect(screen.getByTestId('signup-screen')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email *')).toBeInTheDocument()
+    expect(screen.getByLabelText('Password *')).toBeInTheDocument()
+    expect(screen.getByLabelText('Confirm Password *')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign Up' })).toBeInTheDocument()
   })
 })
