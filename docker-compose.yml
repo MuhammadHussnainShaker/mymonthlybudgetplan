@@ -15,10 +15,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      # Firebase private key is mounted as a service-account JSON file
-      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/firebase_key.json
-    volumes:
-      - ./secrets/firebase_key.json:/run/secrets/firebase_key.json:ro
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
     networks:
       - mmbp-network
     healthcheck:
