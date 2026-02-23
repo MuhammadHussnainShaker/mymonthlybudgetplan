@@ -15,7 +15,10 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+      # Firebase private key is mounted as a service-account JSON file
+      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/firebase_key.json
+    volumes:
+      - ./secrets/firebase_key.json:/run/secrets/firebase_key.json:ro
     networks:
       - mmbp-network
     healthcheck:
@@ -26,6 +29,7 @@ services:
       start_period: 40s
 
   # Frontend build service (builds static files)
+  # container_name deliberately omitted to avoid name collisions on re-runs
   frontend-build:
     build:
       context: ./frontend
@@ -39,10 +43,9 @@ services:
         - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
         - VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
     volumes:
-      # Mount the dist directory to a named volume
-      # Any files written to /app/dist will go to frontend-dist
-      - frontend-dist:/app/dist
-    command: ["sh", "-c", "echo 'Frontend build container - dist files available in volume'"]
+      # Mount volume at /dist-vol (not /app/dist) so the baked-in /app/dist is visible
+      - frontend-dist:/dist-vol
+    command: ["sh", "-c", "cp -a /app/dist/. /dist-vol/ && chmod -R 755 /dist-vol"]
 
   # Caddy reverse proxy and static file server
   caddy:

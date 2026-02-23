@@ -4,6 +4,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 vi.mock('firebase-admin', () => {
   const mockAuth = vi.fn()
   const mockCert = vi.fn((config) => config)
+  const mockApplicationDefault = vi.fn(() => 'mock-default-credential')
   const mockInitializeApp = vi.fn(() => 'mock-app')
 
   return {
@@ -11,6 +12,7 @@ vi.mock('firebase-admin', () => {
       initializeApp: mockInitializeApp,
       credential: {
         cert: mockCert,
+        applicationDefault: mockApplicationDefault,
       },
       auth: mockAuth,
     },
@@ -27,6 +29,7 @@ describe('Firebase Config', () => {
     vi.doMock('firebase-admin', () => {
       const mockAuth = vi.fn(() => 'mock-auth')
       const mockCert = vi.fn((config) => config)
+      const mockApplicationDefault = vi.fn(() => 'mock-default-credential')
       const mockInitializeApp = vi.fn(() => 'mock-app')
 
       return {
@@ -34,6 +37,7 @@ describe('Firebase Config', () => {
           initializeApp: mockInitializeApp,
           credential: {
             cert: mockCert,
+            applicationDefault: mockApplicationDefault,
           },
           auth: mockAuth,
         },
@@ -46,6 +50,7 @@ describe('Firebase Config', () => {
     delete process.env.FIREBASE_PROJECT_ID
     delete process.env.FIREBASE_CLIENT_EMAIL
     delete process.env.FIREBASE_PRIVATE_KEY
+    delete process.env.GOOGLE_APPLICATION_CREDENTIALS
   })
 
   describe('initializeFirebase', () => {
@@ -102,6 +107,19 @@ describe('Firebase Config', () => {
 
       expect(first).toBe(second)
       expect(admin.initializeApp).toHaveBeenCalledTimes(1)
+    })
+
+    it('uses applicationDefault when GOOGLE_APPLICATION_CREDENTIALS is set', async () => {
+      process.env.GOOGLE_APPLICATION_CREDENTIALS = '/run/secrets/firebase_key.json'
+
+      const { initializeFirebase } = await import('../config/firebase.js')
+      initializeFirebase()
+
+      expect(admin.credential.applicationDefault).toHaveBeenCalled()
+      expect(admin.credential.cert).not.toHaveBeenCalled()
+      expect(admin.initializeApp).toHaveBeenCalledWith({
+        credential: 'mock-default-credential',
+      })
     })
 
     it('returns null and logs error on initialization failure', async () => {
