@@ -76,8 +76,7 @@ jobs:
             # Docker commands
 
             docker compose -f docker-compose.yml build frontend-build
-            # Run one-off frontend build to populate the frontend-dist named volume
-            docker compose -f docker-compose.yml run --rm frontend-build sh -c "bun install && bun run build"
+            docker compose -f docker-compose.yml run --rm --no-deps frontend-build
 
             docker compose -f docker-compose.yml up -d --no-deps --force-recreate backend caddy
 

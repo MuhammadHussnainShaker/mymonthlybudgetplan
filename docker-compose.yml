@@ -39,10 +39,8 @@ services:
         - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
         - VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
     volumes:
-      # Mount the dist directory to a named volume
-      # Any files written to /app/dist will go to frontend-dist
-      - frontend-dist:/app/dist
-    command: ["sh", "-c", "echo 'Frontend build container - dist files available in volume'"]
+      - frontend-dist:/dist-vol
+    command: ["sh", "-c", "cp -a /app/dist/. /dist-vol/ && chmod -R 755 /dist-vol"]
 
   # Caddy reverse proxy and static file server
   caddy:
