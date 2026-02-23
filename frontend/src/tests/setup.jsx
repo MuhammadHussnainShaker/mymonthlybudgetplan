@@ -27,17 +27,4 @@ vi.mock('firebase/auth', () => ({
   sendEmailVerification: vi.fn(() => Promise.resolve()),
 }))
 
-vi.mock('@firebase-oss/ui-core', () => ({
-  initializeUI: vi.fn(() => ({})),
-}))
-
-vi.mock('@firebase-oss/ui-react', () => ({
-  FirebaseUIProvider: ({ children }) => children,
-  SignUpAuthScreen: ({ onSignUp }) => (
-    <div data-testid="signup-screen">SignUp Screen</div>
-  ),
-  SignInAuthScreen: ({ onSignIn }) => (
-    <div data-testid="signin-screen">SignIn Screen</div>
-  ),
-}))
 

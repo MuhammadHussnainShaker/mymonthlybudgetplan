@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getAuth } from 'firebase/auth'
-import { initializeUI } from '@firebase-oss/ui-core'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,8 +13,5 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-export const ui = initializeUI({
-  app,
-})
 export const auth = getAuth(app)
 const analytics = getAnalytics(app)

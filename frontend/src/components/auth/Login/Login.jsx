@@ -1,20 +1,28 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
-import { SignInAuthScreen } from '@firebase-oss/ui-react'
-import { sendEmailVerification } from 'firebase/auth'
+import { useNavigate, Link } from 'react-router'
+import {
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth'
 import { auth } from '@/services/firebase/firebaseClient'
 import useUserStore from '@/store/useUserStore'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import { apiAuthFetch } from '@/utils/apiFetch'
+import FullPageSpinner from '@/components/ui/FullPageSpinner'
+import InputComponent from '@/components/ui/InputComponent'
+import ButtonComponent from '@/components/ui/ButtonComponent'
 
 export default function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [isResending, setIsResending] = useState(false)
   const [showResend, setShowResend] = useState(false)
-  const navigate = useNavigate()
   const login = useUserStore((state) => state.login)
+  const navigate = useNavigate()
 
-  const handleResendVerification = async () => {
+  const handleResendVerificationEmail = async () => {
     setIsResending(true)
     setError('')
 
@@ -27,18 +35,14 @@ export default function Login() {
         return
       }
 
-      const verificationUrl = import.meta.env.DEV
-        ? 'http://localhost:5173/login'
-        : `${window.location.origin}/login`
-
       await sendEmailVerification(user, {
-        url: verificationUrl,
+        url: `${window.location.origin}/login`,
       })
 
       navigate('/verify-email')
     } catch (err) {
-      console.error('Error resending verification email:', err)
-      setError(err?.message || 'Failed to resend verification email')
+      console.error('Error resending verification email:', err?.code)
+      setError(err?.code || 'Failed to resend verification email')
     } finally {
       setIsResending(false)
     }
@@ -74,6 +78,31 @@ export default function Login() {
     }
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError('')
+    setShowResend(false)
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      )
+      await handleSignIn(userCredential.user)
+    } catch (err) {
+      console.error('Error signing in:', err?.code)
+      setError(err?.code || 'Invalid email or password')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isSubmitting) return <FullPageSpinner message='Signing in...' />
+  if (isResending)
+    return <FullPageSpinner message='Sending verfication email...' />
+
   return (
     <div className='max-w-md mx-auto space-y-3'>
       <ErrorMessage message={error} />
@@ -81,24 +110,58 @@ export default function Login() {
       {showResend && !isResending && (
         <div className='text-center'>
           <button
-            onClick={handleResendVerification}
-            className='text-sm text-blue-400 hover:text-blue-300 underline'
+            onClick={handleResendVerificationEmail}
+            className='text-sm text-sky-400 hover:text-sky-300 underline'
           >
             Resend verification email
           </button>
         </div>
       )}
 
-      {isResending && (
-        <p className='text-sm text-center text-slate-400'>
-          Sending verification email...
-        </p>
-      )}
+      <form onSubmit={handleSubmit} className='space-y-3'>
+        <InputComponent
+          label='Email'
+          type='email'
+          name='email'
+          id='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={isSubmitting}
+          placeholder='Enter your email'
+        />
+        <InputComponent
+          label='Password'
+          type='password'
+          name='password'
+          id='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          disabled={isSubmitting}
+          placeholder='Enter your password'
+        />
 
-      <SignInAuthScreen
-        onSignIn={handleSignIn}
-        onForgotPasswordClick={() => navigate('/forgot-password')}
-      />
+        <div className='text-right'>
+          <Link
+            to='/forgot-password'
+            className='text-sm text-sky-400 hover:text-sky-300'
+          >
+            Forgot password?
+          </Link>
+        </div>
+
+        <ButtonComponent type='submit' disabled={isSubmitting}>
+          {isSubmitting ? 'Signing in...' : 'Sign In'}
+        </ButtonComponent>
+      </form>
+
+      <p className='text-sm text-center text-slate-400'>
+        Don&apos;t have an account?{' '}
+        <Link to='/signup' className='text-sky-400 hover:text-sky-300'>
+          Sign up
+        </Link>
+      </p>
     </div>
   )
 }

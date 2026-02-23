@@ -5,7 +5,7 @@ export default function VerifyEmail() {
     <div className='max-w-md mx-auto space-y-6 text-center'>
       <div className='space-y-3'>
         <h1 className='text-2xl font-semibold'>Verify Your Email</h1>
-        <p className='text-slate-400'>
+        <p className='text-sm text-slate-400'>
           We've sent you an email with a verification link. Please check your
           inbox and click the link to verify your email address.
         </p>
@@ -17,7 +17,7 @@ export default function VerifyEmail() {
         </p>
         <Link
           to='/login'
-          className='inline-block px-4 py-2 text-sm border border-slate-700/50 rounded hover:bg-slate-800/50 transition-colors'
+          className='inline-block px-4 py-2 text-sm text-white border font-medium bg-gray-950 hover:bg-gray-800 hover:cursor-pointer rounded  transition-colors'
         >
           Go to Login
         </Link>

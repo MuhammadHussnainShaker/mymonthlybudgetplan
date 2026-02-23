@@ -20,12 +20,6 @@ describe('firebaseClient', () => {
     expect(config).toHaveProperty('projectId')
   })
 
-  it('exports ui instance from Firebase UI', async () => {
-    const module = await import('./firebaseClient')
-    expect(module.ui).toBeDefined()
-    expect(typeof module.ui).toBe('object')
-  })
-
   it('exports auth instance from Firebase', async () => {
     const module = await import('./firebaseClient')
     expect(module.auth).toBeDefined()

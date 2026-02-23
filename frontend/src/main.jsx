@@ -15,14 +15,11 @@ import {
   UserProfile,
 } from '@/pages/index.js'
 import { AuthLayout } from '@/components/index.js'
-import { FirebaseUIProvider } from '@firebase-oss/ui-react'
-import { ui } from '@/services/firebase/firebaseClient'
 
 const root = document.getElementById('root')
 
 createRoot(root).render(
   <StrictMode>
-    <FirebaseUIProvider ui={ui}>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<App />}>
@@ -46,6 +43,5 @@ createRoot(root).render(
           </Route>
         </Routes>
       </BrowserRouter>
-    </FirebaseUIProvider>
   </StrictMode>,
 )

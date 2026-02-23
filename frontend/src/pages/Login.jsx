@@ -1,9 +1,9 @@
-import { Login as LoginComponent } from '@/components'
+import { Container, Login as LoginComponent } from '@/components'
 
 export default function Login() {
   return (
-    <div>
+    <Container>
       <LoginComponent />
-    </div>
+    </Container>
   )
 }
