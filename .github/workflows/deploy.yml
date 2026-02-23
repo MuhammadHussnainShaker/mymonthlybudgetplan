@@ -22,12 +22,12 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          
+
           # Firebase Admin (Backend)
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-          
+
           # Firebase Client (Frontend - build time)
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -47,7 +47,7 @@ jobs:
             # Navigate to VPS's project directory
             cd ~/mymonthlybudgetplan || exit 1
 
-            # Pull latest changes from deploy branch
+            # Pull latest
             git checkout main && git pull origin main
 
             # Create .env file with secrets
@@ -74,7 +74,12 @@ jobs:
             sed -i 's/^[[:space:]]*//' .env
 
             # Docker commands
-            docker compose -f docker-compose.yml down
-            docker compose -f docker-compose.yml up -d --build
+
+            docker compose -f docker-compose.yml build frontend-build
+            # Run one-off frontend build to populate the frontend-dist named volume
+            docker compose -f docker-compose.yml run --rm frontend-build sh -c "bun install && bun run build"
+
+            docker compose -f docker-compose.yml up -d --no-deps --force-recreate backend caddy
+
             docker compose -f docker-compose.yml ps
             docker compose -f docker-compose.yml logs --tail=50
