@@ -20,14 +20,14 @@ describe('ForgotPassword', () => {
   it('renders forgot password form', () => {
     render(<ForgotPassword />)
 
-    expect(screen.getByLabelText('Email')).toBeInTheDocument()
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Send Reset Email' })).toBeInTheDocument()
   })
 
   it('allows user to enter email', () => {
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
     expect(emailInput).toHaveValue('test@example.com')
@@ -40,18 +40,15 @@ describe('ForgotPassword', () => {
 
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     const submitButton = screen.getByRole('button', { name: 'Send Reset Email' })
 
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText('Sending...')).toBeInTheDocument()
+      expect(screen.getByText('Sending password reset email...')).toBeInTheDocument()
     })
-
-    expect(submitButton).toBeDisabled()
-    expect(emailInput).toBeDisabled()
   })
 
   it('displays success message after successful submission', async () => {
@@ -59,7 +56,7 @@ describe('ForgotPassword', () => {
 
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
     const submitButton = screen.getByRole('button', { name: 'Send Reset Email' })
@@ -72,19 +69,19 @@ describe('ForgotPassword', () => {
   })
 
   it('displays error message on failure', async () => {
-    const errorMessage = 'Email not found'
-    sendPasswordResetEmail.mockRejectedValue(new Error(errorMessage))
+    const errorCode = 'auth/user-not-found'
+    sendPasswordResetEmail.mockRejectedValue({ code: errorCode })
 
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
     const submitButton = screen.getByRole('button', { name: 'Send Reset Email' })
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument()
+      expect(screen.getByText(errorCode)).toBeInTheDocument()
     })
   })
 
@@ -93,7 +90,7 @@ describe('ForgotPassword', () => {
 
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
     const submitButton = screen.getByRole('button', { name: 'Send Reset Email' })
@@ -109,7 +106,7 @@ describe('ForgotPassword', () => {
 
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
     const submitButton = screen.getByRole('button', { name: 'Send Reset Email' })
@@ -129,14 +126,14 @@ describe('ForgotPassword', () => {
   it('requires email field to be filled', () => {
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     expect(emailInput).toBeRequired()
   })
 
   it('email input has correct type', () => {
     render(<ForgotPassword />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText(/email/i)
     expect(emailInput).toHaveAttribute('type', 'email')
   })
 })

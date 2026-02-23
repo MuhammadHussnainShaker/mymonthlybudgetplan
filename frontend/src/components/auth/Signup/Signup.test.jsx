@@ -25,13 +25,14 @@ describe('Signup', () => {
     mockNavigate.mockClear()
   })
 
-  it('renders signup form with FirebaseUI', () => {
+  it('renders signup form', () => {
     render(
       <MemoryRouter>
         <Signup />
       </MemoryRouter>,
     )
 
-    expect(screen.getByTestId('signup-screen')).toBeInTheDocument()
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument()
   })
 })

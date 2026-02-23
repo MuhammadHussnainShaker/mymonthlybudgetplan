@@ -25,13 +25,15 @@ describe('Login', () => {
     mockNavigate.mockClear()
   })
 
-  it('renders login form with FirebaseUI', () => {
+  it('renders login form', () => {
     render(
       <MemoryRouter>
         <Login />
       </MemoryRouter>,
     )
 
-    expect(screen.getByTestId('signin-screen')).toBeInTheDocument()
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
   })
 })

@@ -12,7 +12,7 @@ describe('ErrorMessage', () => {
     const { container } = render(<ErrorMessage message="Error text" />)
     const errorElement = container.querySelector('p')
 
-    expect(errorElement).toHaveClass('text-red-500')
+    expect(errorElement).toHaveClass('text-red-300')
     expect(errorElement).toHaveClass('text-sm')
   })
 
