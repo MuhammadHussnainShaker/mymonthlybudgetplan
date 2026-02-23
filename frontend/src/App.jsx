@@ -3,9 +3,9 @@ import { Footer, Header } from '@/components'
 
 function App() {
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-dvh flex flex-col'>
       <Header />
-      <main className='py-6'>
+      <main className='flex-1 flex items-center justify-center py-6 '>
         <Outlet />
       </main>
       <Footer />

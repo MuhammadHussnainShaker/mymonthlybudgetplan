@@ -7,6 +7,8 @@ import {
 } from 'firebase/auth'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import FullPageSpinner from '@/components/ui/FullPageSpinner'
+import InputComponent from '@/components/ui/InputComponent'
+import ButtonComponent from '@/components/ui/ButtonComponent'
 
 export default function Signup() {
   const [email, setEmail] = useState('')
@@ -50,61 +52,45 @@ export default function Signup() {
     <div className='max-w-md mx-auto space-y-3'>
       <ErrorMessage message={error} />
       <form onSubmit={handleSubmit} className='space-y-3'>
-        <div className='grid gap-1'>
-          <label htmlFor='email' className='text-sm'>
-            Email:{' '}
-          </label>
-          <input
-            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
-            type='email'
-            name='email'
-            id='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-        </div>
-        <div className='grid gap-1'>
-          <label htmlFor='password' className='text-sm'>
-            Password:{' '}
-          </label>
-          <input
-            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
-            type='password'
-            name='password'
-            id='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-        </div>
-        <div className='grid gap-1'>
-          <label htmlFor='confirmPW' className='text-sm'>
-            Confirm Password:{' '}
-          </label>
-          <input
-            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
-            type='password'
-            name='confirmPW'
-            id='confirmPW'
-            value={confirmPW}
-            onChange={(e) => setConfirmPW(e.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-          <button
-            type='submit'
-            disabled={isSubmitting}
-            className='w-full rounded bg-gray-950 mt-4 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50'
-          >
-            Sign Up
-          </button>
-        </div>
+        <InputComponent
+          label='Email'
+          type='email'
+          name='email'
+          id='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isSubmitting}
+          required
+          placeholder='Enter your email'
+        />
+        <InputComponent
+          label='Password'
+          type='password'
+          name='password'
+          id='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isSubmitting}
+          required
+          placeholder='Enter your password'
+        />
+        <InputComponent
+          label='Confirm Password'
+          type='password'
+          name='confirmPW'
+          id='confirmPW'
+          value={confirmPW}
+          onChange={(e) => setConfirmPW(e.target.value)}
+          disabled={isSubmitting}
+          required
+          placeholder='Confirm your password'
+        />
+        <ButtonComponent type='submit' disabled={isSubmitting}>
+          {isSubmitting ? 'Signing in...' : 'Sign In'}
+        </ButtonComponent>
       </form>
       <p className='text-sm text-center text-slate-600'>
-        Already have and account{' '}
+        Already have an account{' '}
         <Link to='/login' className='text-sky-400 hover:text-sky-300'>
           Login
         </Link>

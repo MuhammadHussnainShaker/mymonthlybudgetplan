@@ -3,6 +3,8 @@ import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/services/firebase/firebaseClient'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import FullPageSpinner from '@/components/ui/FullPageSpinner'
+import ButtonComponent from '@/components/ui/ButtonComponent'
+import InputComponent from '@/components/ui/InputComponent'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -45,29 +47,21 @@ export default function ForgotPassword() {
       <ErrorMessage message={error} />
 
       <form onSubmit={handleSubmit} className='space-y-3'>
-        <div className='grid gap-1'>
-          <label htmlFor='email' className='text-sm'>
-            Email
-          </label>
-          <input
-            className='rounded border border-slate-700/50 bg-transparent px-2 py-1 text-sm'
-            type='email'
-            name='email'
-            id='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={isSubmitting}
-          />
-        </div>
-
-        <button
-          type='submit'
+        <InputComponent
+          label='Email'
+          type='email'
+          name='email'
+          id='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
           disabled={isSubmitting}
-          className='w-full rounded bg-gray-950 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50'
-        >
+          placeholder='Enter your email'
+        />
+
+        <ButtonComponent type='submit' disabled={isSubmitting}>
           Send Reset Email
-        </button>
+        </ButtonComponent>
       </form>
     </div>
   )
