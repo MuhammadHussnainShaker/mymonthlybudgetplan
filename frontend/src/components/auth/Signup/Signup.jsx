@@ -86,7 +86,7 @@ export default function Signup() {
           placeholder='Confirm your password'
         />
         <ButtonComponent type='submit' disabled={isSubmitting}>
-          {isSubmitting ? 'Signing in...' : 'Sign In'}
+          Sign Up
         </ButtonComponent>
       </form>
       <p className='text-sm text-center text-slate-600'>
