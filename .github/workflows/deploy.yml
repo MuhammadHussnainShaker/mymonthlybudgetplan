@@ -60,6 +60,7 @@ jobs:
             JWT_SECRET=${JWT_SECRET}
             FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
             FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+            FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
             VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
             VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN}
             VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID}
@@ -72,17 +73,9 @@ jobs:
             # Remove leading indentation added by YAML so .env lines are left-aligned
             sed -i 's/^[[:space:]]*//' .env
 
-            # Append FIREBASE_PRIVATE_KEY separately so that embedded newlines or
-            # special shell characters in the PEM key cannot break the heredoc above.
-            printf 'FIREBASE_PRIVATE_KEY=%s\n' "$FIREBASE_PRIVATE_KEY" >> .env
-
             # Docker commands
 
-            # Build the frontend image (bun install + bun run build happen inside the Dockerfile)
             docker compose -f docker-compose.yml build frontend-build
-            # Populate the frontend-dist named volume by running the built image.
-            # The volume is mounted at /dist-vol (not /app/dist) so the baked-in
-            # /app/dist in the image is not shadowed; the command copies it into the volume.
             docker compose -f docker-compose.yml run --rm --no-deps frontend-build
 
             docker compose -f docker-compose.yml up -d --no-deps --force-recreate backend caddy

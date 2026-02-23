@@ -26,7 +26,6 @@ services:
       start_period: 40s
 
   # Frontend build service (builds static files)
-  # container_name deliberately omitted to avoid name collisions on re-runs
   frontend-build:
     build:
       context: ./frontend
@@ -40,7 +39,6 @@ services:
         - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
         - VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
     volumes:
-      # Mount volume at /dist-vol (not /app/dist) so the baked-in /app/dist is visible
       - frontend-dist:/dist-vol
     command: ["sh", "-c", "cp -a /app/dist/. /dist-vol/ && chmod -R 755 /dist-vol"]
 
